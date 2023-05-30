@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Lampung</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/leaflet.css">
+    <link rel="stylesheet" href="assets/css/qgis2web.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/leaflet-search.css">
+    <link rel="stylesheet" href="assets/css/leaflet-control-geocoder.Geocoder.css">
+    <style>
+        #map, #mapNav, .mapInfo {
+            background-color: rgb(249 250 251);
+            width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+        }
+        #mapNav, #map {
+            border: solid 2.5px rgb(6 95 70);
+            -webkit-box-shadow: -10px 8px 20px -4px rgba(16,185,129,0.34);
+            -moz-box-shadow: -10px 8px 20px -4px rgba(16,185,129,0.34);
+            box-shadow: -10px 8px 20px -4px rgba(16,185,129,0.34);
+        }
+        #map {
+            height: 85vh;
+        }
+        #mapNav {
+            padding: 6px;
+            margin-top: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .mapInfo {
+            padding: 16px;
+            margin-top: 32px;
+            font-size: large;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #065f46;
+            margin-bottom: 32px;
+        }
+        .area-image {
+            border-radius: 8px;
+            display: block;
+            margin-bottom: 20px;
+            width: 30%;
+            margin-left: auto;
+            margin-right: auto;
+            height: auto;
+        }
+        .area-btn {
+            padding: 4px 8px;
+            border: none;
+            outline: none;
+            background-color: rgb(5 150 105);
+            color: white;
+            font-size: small;
+            font-family: Arial, Helvetica, sans-serif;
+            border-radius: 4px;
+        }
+        .area-btn:hover, .active {
+            background-color: rgb(4 120 87);
+        }
+        .hidden {
+            display: none !important;
+        }
+        @media (min-width: 768px) { 
+            #map, #mapNav, .mapInfo {
+                width: 66vw;
+            }
+        }
+
+        @media (min-width: 1024px) { 
+            #map, #mapNav, .mapInfo {
+                width: 50vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; font-family: Arial, Helvetica, sans-serif; color: #065f46;">PETA ADMINISTRATIF PROVINSI LAMPUNG</h1>
+    <div id="map" ></div>
+    <div id="mapNav">
+        <button id="kab_lampung_barat" class="area-btn">Lampung Barat</button>
+        <button id="kab_lampung_selatan" class="area-btn">Lampung Selatan</button>
+        <button id="kab_lampung_tengah" class="area-btn">Lampung Tengah</button>
+        <button id="kab_lampung_timur" class="area-btn">Lampung Timur</button>
+        <button id="kab_lampung_utara" class="area-btn">Lampung Utara</button>
+        <button id="kab_mesuji" class="area-btn">Mesuji</button>
+        <button id="kab_pesawaran" class="area-btn">Pesawaran</button>
+        <button id="kab_pesisir_barat" class="area-btn">Pesisir Barat</button>
+        <button id="kab_pringsewu" class="area-btn">Pringsewu</button>
+        <button id="kab_tanggamus" class="area-btn">Tanggamus</button>
+        <button id="kab_tulang_bawang" class="area-btn">Tulang Bawang</button>
+        <button id="kab_tulang_bawang_barat" class="area-btn">Tulang Bawang Barat</button>
+        <button id="kab_way_kanan" class="area-btn">Way Kanan</button>
+        <button id="kota_bandar_lampung" class="area-btn">Bandar Lampung</button>
+        <button id="kota_metro" class="area-btn">Metro</button>
+    </div>
+
+    <div id="kab_lampung_barat_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/aa/Lambang_Kabupaten_Lampung_Barat.jpg" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Lampung Barat</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.142,78 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>302.139 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>136 </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_lampung_selatan_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Lambang_Kabupaten_Lampung_Selatan.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Lampung Selatan</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.219,01 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>1.064.301 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>17</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>260 </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_lampung_tengah_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Lambang_Kabupaten_Lampung_Tengah.png/431px-Lambang_Kabupaten_Lampung_Tengah.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Lampung Tengah</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>4.544,68 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>1.460.045 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>28 </td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>311 </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_lampung_timur_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Lambang_Kabupaten_Lampung_Timur.png/443px-Lambang_Kabupaten_Lampung_Timur.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Lampung Timur</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>3.864,69 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>1.110.340 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>24</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>264</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_lampung_utara_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Lambang_Kabupaten_Lampung_Utara.png/481px-Lambang_Kabupaten_Lampung_Utara.png?20180205141839" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Lampung Utara</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.529,54 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>633.099 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>23</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>247</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_mesuji_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/LOGO_KABUPATEN_MESUJI.png/475px-LOGO_KABUPATEN_MESUJI.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Mesuji</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.205,57 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>227.518 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>105</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_pesawaran_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Lambang_Kabupaten_Pesawaran.png/391px-Lambang_Kabupaten_Pesawaran.png?20180207163931" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Pesawaran</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>1.278,21 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>477.468 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>144</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_pesisir_barat_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Lambang_Kabupaten_Pesisir_Barat.png/415px-Lambang_Kabupaten_Pesisir_Barat.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Pesisir Barat</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.988,07 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>162.697 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>118</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_pringsewu_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Lambang_Kabupaten_Pringsewu.png/464px-Lambang_Kabupaten_Pringsewu.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Pringsewu</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>614,48 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>405.466 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>131</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_tanggamus_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Lambang_Kabupaten_Tanggamus.png/441px-Lambang_Kabupaten_Tanggamus.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Tanggamus</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>2.900,29 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>640.275 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>302</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_tulang_bawang_barat_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Lambang_Kabupaten_Tulang_Bawang_Barat.png/430px-Lambang_Kabupaten_Tulang_Bawang_Barat.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Tulang Bawang Barat</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>1.285,74 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>286.162 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>96</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_tulang_bawang_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LOGO_KABUPATEN_TULANG_BAWANG.png/442px-LOGO_KABUPATEN_TULANG_BAWANG.png?20150113111759" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Tulang Bawang</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>3.091,08 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>430.021 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>151</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kab_way_kanan_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Lambang_Kabupaten_Way_Kanan.png/436px-Lambang_Kabupaten_Way_Kanan.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kabupaten Way Kanan</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>3.657,49 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>473.575 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>14</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>227</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kota_metro_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/LOGO_KOTA_METRO.png/395px-LOGO_KOTA_METRO.png" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kota Metro</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>73,15 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>168.676 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>22</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="kota_bandar_lampung_info" class="mapInfo hidden">
+        <h1 style="font-size: large; color: #065f46; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+            Detail Wilayah
+        </h1>
+        <img src="https://upload.wikimedia.org/wikipedia/id/thumb/6/6a/LOGO_KOTA_BANDAR_LAMPUNG_BARU.png/503px-LOGO_KOTA_BANDAR_LAMPUNG_BARU.png?20150113143428" alt="" class="area-image">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Nama</th>
+                    <td>:</td>
+                    <td>Kota Bandar Lampung (Ibu Kota Provinsi)</td>
+                </tr>
+                <tr>
+                    <th>Luas Wilayah</th>
+                    <td>:</td>
+                    <td>183,31 km²</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Penduduk</th>
+                    <td>:</td>
+                    <td>1.166.066 jiwa (2020)</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kecamatan</th>
+                    <td>:</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <th>Jumlah Kelurahan/Desa</th>
+                    <td>:</td>
+                    <td>126</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="assets/js/qgis2web_expressions.js"></script>
+    <script src="assets/js/leaflet.js"></script>
+    <script src="assets/js/multi-style-layer.js"></script>
+    <script src="assets/js/leaflet.rotatedMarker.js"></script>
+    <script src="assets/js/leaflet-hash.js"></script>
+    <script src="assets/js/Autolinker.min.js"></script>
+    <script src="assets/js/rbush.min.js"></script>
+    <script src="assets/js/labelgun.min.js"></script>
+    <script src="assets/js/labels.js"></script>
+    <script src="assets/js/leaflet-control-geocoder.Geocoder.js"></script>
+
+    <script src="assets/data/provinsi_lampung.js"></script>
+    
+    <script src="assets/data/kab_lampung_barat.js"></script>
+    <script src="assets/data/kab_lampung_selatan.js"></script>
+    <script src="assets/data/kab_lampung_tengah.js"></script>
+    <script src="assets/data/kab_lampung_timur.js"></script>
+    <script src="assets/data/kab_lampung_utara.js"></script>
+    <script src="assets/data/kab_mesuji.js"></script>
+    <script src="assets/data/kab_pesawaran.js"></script>
+    <script src="assets/data/kab_pesisir_barat.js"></script>
+    <script src="assets/data/kab_pringsewu.js"></script>
+    <script src="assets/data/kab_tanggamus.js"></script>
+    <script src="assets/data/kab_tulang_bawang_barat.js"></script>
+    <script src="assets/data/kab_tulang_bawang.js"></script>
+    <script src="assets/data/kab_way_kanan.js"></script>
+    <script src="assets/data/kota_bandar_lampung.js"></script>
+    <script src="assets/data/kota_metro.js"></script>
+
+    <script>
+        var map = L.map('map', {
+            zoomControl:true, 
+            zoom:8,
+            maxZoom:14, 
+            minZoom:8
+        }).fitBounds([[-6.162028, 103.437829],[-3.559671, 106.116883]]);
+
+        var hash = new L.Hash(map);
+
+        map.attributionControl.setPrefix(
+            '<a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet JS</a>'
+        );
+
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+
+        var bounds_group = new L.featureGroup([]);
+
+        function setBounds() {
+        }
+
+        // PROVINSI
+        function style_provinsi() {
+            return {
+                pane        : 'pane_provinsi',
+                stroke      : true, 
+                fill        : true,
+                fillOpacity : 1,
+                fillColor   : 'rgb(209 250 229)',
+                opacity     : 1,
+                color       : 'rgb(209 250 229)',
+                dashArray   : '',
+                lineCap     : 'square',
+                lineJoin    : 'bevel',
+                interactive : true,
+            }
+        }
+        map.createPane('pane_provinsi');
+        map.getPane('pane_provinsi').style.zIndex = 400;
+        map.getPane('pane_provinsi').style['mix-blend-mode'] = 'normal';
+        
+        var layer_provinsi = new L.geoJson(provinsi_lampung, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'provinsi_lampung',
+            layerName: 'layer_provinsi',
+            pane: 'pane_provinsi',
+            style: style_provinsi,
+        });
+        bounds_group.addLayer(layer_provinsi);
+        map.addLayer(layer_provinsi);
+
+        function style_Wilayah_Kota() {
+            return {
+                opacity: 1,
+                color: 'rgb(6 78 59)',
+                dashArray: '4',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgb(5 150 105)',
+                interactive: true,
+            }
+        }
+        function style_Wilayah_Kabupaten() {
+            return {
+                opacity: 1,
+                color: 'rgb(6 78 59)',
+                dashArray: '4',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgb(16 185 129)',
+                interactive: true,
+            }
+        }
+
+        // LAMPUNG BARAT
+        function pop_Lampung_Barat(feature, layer) {
+        }
+        map.createPane('pane_Lampung_Barat');
+        map.getPane('pane_Lampung_Barat').style.zIndex = 401;
+        map.getPane('pane_Lampung_Barat').style['mix-blend-mode'] = 'normal';
+        var layer_Lampung_Barat = new L.geoJson(kab_lampung_barat, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_lampung_barat',
+            layerName: 'layer_Lampung_Barat',
+            pane: 'pane_Lampung_Barat',
+            onEachFeature: pop_Lampung_Barat,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Lampung_Barat);
+        map.addLayer(layer_Lampung_Barat);
+        
+        // LAMPUNG SELATAN
+        function pop_Lampung_Selatan(feature, layer) {
+        }
+        map.createPane('pane_Lampung_Selatan');
+        map.getPane('pane_Lampung_Selatan').style.zIndex = 401;
+        map.getPane('pane_Lampung_Selatan').style['mix-blend-mode'] = 'normal';
+        var layer_Lampung_Selatan = new L.geoJson(kab_lampung_selatan, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_lampung_selatan',
+            layerName: 'layer_Lampung_Selatan',
+            pane: 'pane_Lampung_Selatan',
+            onEachFeature: pop_Lampung_Selatan,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Lampung_Selatan);
+        map.addLayer(layer_Lampung_Selatan);
+
+        // LAMPUNG TENGAH
+        function pop_Lampung_Tengah(feature, layer) {
+        }
+        map.createPane('pane_Lampung_Tengah');
+        map.getPane('pane_Lampung_Tengah').style.zIndex = 401;
+        map.getPane('pane_Lampung_Tengah').style['mix-blend-mode'] = 'normal';
+        var layer_Lampung_Tengah = new L.geoJson(kab_lampung_tengah, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_lampung_tengah',
+            layerName: 'layer_Lampung_Tengah',
+            pane: 'pane_Lampung_Tengah',
+            onEachFeature: pop_Lampung_Tengah,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Lampung_Tengah);
+        map.addLayer(layer_Lampung_Tengah);
+        
+        // LAMPUNG TIMUR
+        function pop_Lampung_Timur(feature, layer) {
+        }
+        map.createPane('pane_Lampung_Timur');
+        map.getPane('pane_Lampung_Timur').style.zIndex = 401;
+        map.getPane('pane_Lampung_Timur').style['mix-blend-mode'] = 'normal';
+        var layer_Lampung_Timur = new L.geoJson(kab_lampung_timur, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_lampung_timur',
+            layerName: 'layer_Lampung_Timur',
+            pane: 'pane_Lampung_Timur',
+            onEachFeature: pop_Lampung_Timur,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Lampung_Timur);
+        map.addLayer(layer_Lampung_Timur);
+        
+        // LAMPUNG UTARA
+        function pop_Lampung_Utara(feature, layer) {
+        }
+        map.createPane('pane_Lampung_Utara');
+        map.getPane('pane_Lampung_Utara').style.zIndex = 401;
+        map.getPane('pane_Lampung_Utara').style['mix-blend-mode'] = 'normal';
+        var layer_Lampung_Utara = new L.geoJson(kab_lampung_utara, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_lampung_utara',
+            layerName: 'layer_Lampung_Utara',
+            pane: 'pane_Lampung_Utara',
+            onEachFeature: pop_Lampung_Utara,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Lampung_Utara);
+        map.addLayer(layer_Lampung_Utara);
+        
+        // MESUJI
+        function pop_Mesuji(feature, layer) {
+        }
+        map.createPane('pane_Mesuji');
+        map.getPane('pane_Mesuji').style.zIndex = 401;
+        map.getPane('pane_Mesuji').style['mix-blend-mode'] = 'normal';
+        var layer_Mesuji = new L.geoJson(kab_mesuji, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_mesuji',
+            layerName: 'layer_Mesuji',
+            pane: 'pane_Mesuji',
+            onEachFeature: pop_Mesuji,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Mesuji);
+        map.addLayer(layer_Mesuji);
+        
+        // PESAWARAN
+        function pop_Pesawaran(feature, layer) {
+        }
+        map.createPane('pane_Pesawaran');
+        map.getPane('pane_Pesawaran').style.zIndex = 401;
+        map.getPane('pane_Pesawaran').style['mix-blend-mode'] = 'normal';
+        var layer_Pesawaran = new L.geoJson(kab_pesawaran, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_pesawaran',
+            layerName: 'layer_Pesawaran',
+            pane: 'pane_Pesawaran',
+            onEachFeature: pop_Pesawaran,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Pesawaran);
+        map.addLayer(layer_Pesawaran);
+
+        // PESISIR BARAT
+        function pop_Pesisir_Barat(feature, layer) {
+        }
+        map.createPane('pane_Pesisir_Barat');
+        map.getPane('pane_Pesisir_Barat').style.zIndex = 401;
+        map.getPane('pane_Pesisir_Barat').style['mix-blend-mode'] = 'normal';
+        var layer_Pesisir_Barat = new L.geoJson(kab_pesisir_barat, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_pesisir_barat',
+            layerName: 'layer_Pesisir_Barat',
+            pane: 'pane_Pesisir_Barat',
+            onEachFeature: pop_Pesisir_Barat,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Pesisir_Barat);
+        map.addLayer(layer_Pesisir_Barat);
+
+        // PRINGSEWU
+        function pop_Pringsewu(feature, layer) {
+        }
+        map.createPane('pane_Pringsewu');
+        map.getPane('pane_Pringsewu').style.zIndex = 401;
+        map.getPane('pane_Pringsewu').style['mix-blend-mode'] = 'normal';
+        var layer_Pringsewu = new L.geoJson(kab_pringsewu, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_pringsewu',
+            layerName: 'layer_Pringsewu',
+            pane: 'pane_Pringsewu',
+            onEachFeature: pop_Pringsewu,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Pringsewu);
+        map.addLayer(layer_Pringsewu);
+
+        // TANGGAMUS
+        function pop_Tanggamus(feature, layer) {
+        }
+        map.createPane('pane_Tanggamus');
+        map.getPane('pane_Tanggamus').style.zIndex = 401;
+        map.getPane('pane_Tanggamus').style['mix-blend-mode'] = 'normal';
+        var layer_Tanggamus = new L.geoJson(kab_tanggamus, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_tanggamus',
+            layerName: 'layer_Tanggamus',
+            pane: 'pane_Tanggamus',
+            onEachFeature: pop_Tanggamus,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Tanggamus);
+        map.addLayer(layer_Tanggamus);
+
+        // TULANG BAWANG BARAT
+        function pop_Tulang_Bawang_Barat(feature, layer) {
+        }
+        map.createPane('pane_Tulang_Bawang_Barat');
+        map.getPane('pane_Tulang_Bawang_Barat').style.zIndex = 401;
+        map.getPane('pane_Tulang_Bawang_Barat').style['mix-blend-mode'] = 'normal';
+        var layer_Tulang_Bawang_Barat = new L.geoJson(kab_tulang_bawang_barat, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_tulang_bawang_barat',
+            layerName: 'layer_Tulang_Bawang_Barat',
+            pane: 'pane_Tulang_Bawang_Barat',
+            onEachFeature: pop_Tulang_Bawang_Barat,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Tulang_Bawang_Barat);
+        map.addLayer(layer_Tulang_Bawang_Barat);
+
+        // TULANG BAWANG
+        function pop_Tulang_Bawang(feature, layer) {
+        }
+        map.createPane('pane_Tulang_Bawang');
+        map.getPane('pane_Tulang_Bawang').style.zIndex = 401;
+        map.getPane('pane_Tulang_Bawang').style['mix-blend-mode'] = 'normal';
+        var layer_Tulang_Bawang = new L.geoJson(kab_tulang_bawang, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_tulang_bawang',
+            layerName: 'layer_Tulang_Bawang',
+            pane: 'pane_Tulang_Bawang',
+            onEachFeature: pop_Tulang_Bawang,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Tulang_Bawang);
+        map.addLayer(layer_Tulang_Bawang);
+
+        // WAY KANAN
+        function pop_Way_Kanan(feature, layer) {
+        }
+        map.createPane('pane_Way_Kanan');
+        map.getPane('pane_Way_Kanan').style.zIndex = 401;
+        map.getPane('pane_Way_Kanan').style['mix-blend-mode'] = 'normal';
+        var layer_Way_Kanan = new L.geoJson(kab_way_kanan, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kab_way_kanan',
+            layerName: 'layer_Way_Kanan',
+            pane: 'pane_Way_Kanan',
+            onEachFeature: pop_Way_Kanan,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Way_Kanan);
+        map.addLayer(layer_Way_Kanan);
+
+        // BANDAR LAMPUNG
+        function pop_Bandar_Lampung(feature, layer) {
+        }
+        map.createPane('pane_Bandar_Lampung');
+        map.getPane('pane_Bandar_Lampung').style.zIndex = 401;
+        map.getPane('pane_Bandar_Lampung').style['mix-blend-mode'] = 'normal';
+        var layer_Bandar_Lampung = new L.geoJson(kota_bandar_lampung, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kota_bandar_lampung',
+            layerName: 'layer_Bandar_Lampung',
+            pane: 'pane_Bandar_Lampung',
+            onEachFeature: pop_Bandar_Lampung,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Bandar_Lampung);
+        map.addLayer(layer_Bandar_Lampung);
+
+        // METRO
+        function pop_Metro(feature, layer) {
+            console.log('METRO');
+        }
+        map.createPane('pane_Metro');
+        map.getPane('pane_Metro').style.zIndex = 401;
+        map.getPane('pane_Metro').style['mix-blend-mode'] = 'normal';
+        var layer_Metro = new L.geoJson(kota_metro, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'kota_metro',
+            layerName: 'layer_Metro',
+            pane: 'pane_Metro',
+            onEachFeature: pop_Metro,
+            style: style_Wilayah_Kabupaten,
+        });
+        bounds_group.addLayer(layer_Metro);
+        map.addLayer(layer_Metro);
+        
+
+
+        // TOOLS
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Cari Kabupaten / Kecamatan',
+            title: 'Testing'
+        }).addTo(map);
+
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+
+        var baseMaps = {};
+        
+        // var KotaLayers = L.layerGroup([
+        //     layer_Bandar_Lampung,
+        //     layer_Metro
+        // ]);
+
+        L.control.layers(
+            baseMaps,
+            {
+                // '<img src="legend/BatasKabupaten.jpg" /> Batas Kabupaten': layer_BatasKabupaten,
+                // '<img src="legend/Lampung_Barat.jpg" /> Batas Kecamatan': layer_Lampung_Barat,
+                '<img src="assets/legend/provinsi.jpg" /> Provinsi': layer_provinsi,
+                // '<img src="legend/provinsi.jpg" /> Kabupaten': KotaLayers,
+            },
+            {collapsed:false}
+        ).addTo(map);
+
+        setBounds();
+
+    </script>
+    <!-- JQUERY --> 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" 
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" 
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(".area-btn").mouseenter(function () { 
+                switch ($(this).attr("id")) {
+                    case "kab_lampung_barat":
+                        layer_Lampung_Barat.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_lampung_selatan":
+                        layer_Lampung_Selatan.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_lampung_tengah":
+                        layer_Lampung_Tengah.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_lampung_timur":
+                        layer_Lampung_Timur.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_lampung_utara":
+                        layer_Lampung_Utara.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_mesuji":
+                        layer_Mesuji.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_pesawaran":
+                        layer_Pesawaran.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_pesisir_barat":
+                        layer_Pesisir_Barat.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_pringsewu":
+                        layer_Pringsewu.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_tanggamus":
+                        layer_Tanggamus.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_tulang_bawang":
+                        layer_Tulang_Bawang.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_tulang_bawang_barat":
+                        layer_Tulang_Bawang_Barat.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kab_way_kanan":
+                        layer_Way_Kanan.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kota_bandar_lampung":
+                        layer_Bandar_Lampung.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    case "kota_metro":
+                        layer_Metro.setStyle({ fillColor: "rgb(5 150 105)" }); break;
+                    default:
+                        break;
+                }
+            });
+            
+            $(".area-btn").mouseleave(function () { 
+                switch ($(this).attr("id")) {
+                    case "kab_lampung_barat":
+                        layer_Lampung_Barat.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_lampung_selatan":
+                        layer_Lampung_Selatan.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_lampung_tengah":
+                        layer_Lampung_Tengah.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_lampung_timur":
+                        layer_Lampung_Timur.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_lampung_utara":
+                        layer_Lampung_Utara.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_mesuji":
+                        layer_Mesuji.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_pesawaran":
+                        layer_Pesawaran.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_pesisir_barat":
+                        layer_Pesisir_Barat.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_pringsewu":
+                        layer_Pringsewu.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_tanggamus":
+                        layer_Tanggamus.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_tulang_bawang":
+                        layer_Tulang_Bawang.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_tulang_bawang_barat":
+                        layer_Tulang_Bawang_Barat.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kab_way_kanan":
+                        layer_Way_Kanan.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kota_bandar_lampung":
+                        layer_Bandar_Lampung.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    case "kota_metro":
+                        layer_Metro.setStyle({ fillColor: "rgb(16 185 129)" }); break;
+                    default:
+                        break;
+                }
+            });
+
+            $(".area-btn").click(function (e) { 
+                e.preventDefault();
+                $(".area-btn").removeClass("active");
+                $(this).addClass("active");
+                $(".mapInfo").addClass("hidden");
+                $("#"+$(this).attr("id")+"_info").removeClass("hidden");
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        });
+    </script>
+</body>
+</html>
